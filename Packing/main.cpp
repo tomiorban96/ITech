@@ -36,33 +36,34 @@ void debug() {
 }
 
 void debugTable() {
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < N; j++) {
-			cout << table[i][j] << " ";
+	for (int j = 0; j < N; j++) {
+		for (int i = 0; i < N; i++) {
+			cout << table[j][i] << " ";
 		}
 		cout << endl;
 	}
 }
 
-bool getFirstEmpty(vector<pair<int, int>> &v) {
-	for (int i = 0; i < N; i++) {
-		for (int j = 0; j < N; j++) {
-			if ( (i==0 && j==0 && table[0][0] != -1) || (table[i][j] == -1 && ( (i==0 && table[0][j-1]!=-1) || (j==0 && table[i-1][0]!=-1) || (table[i-1][j]!=0 && table[i][j-1]!=0) ) )   ) {
-				v.push_back(make_pair(i,j));
-				return true;	
+bool getEmpties(vector<pair<int, int>> &v) {
+	bool found=false;
+	for (int j = 0; j < N; j++) {
+		for (int i = 0; i < N; i++) {
+			if ( table[j][i] == -1 && ( (i==0 && j==0) || (j==0 && table[0][i-1]!=-1) || (i==0 && table[j-1][0]!=-1) || (table[j-1][i]!=-1 && table[j][i-1]!=-1) ) ) {
+				v.push_back(make_pair(j,i));
+				found=true;
 			}
 		}
 	}
-	return false;
+	return found;
 }
 
-bool putRect(int x, int y, int w, int h, int index) {
+bool putRect(int y, int x, int w, int h, int index) {
 
 	if (x + w > N) return false;
 	if (y + h > N) return false;
 
-	for (int i = x; i < x + w; i++) {
-		for (int j = y; j < y + h; j++) {
+	for (int j = y; j < y + h; j++) {
+		for (int i = x; i < x + w; i++) {
 			table[j][i] = index;
 		}
 	}
@@ -76,7 +77,7 @@ int main() {
 	//Init
 	for (int j = 0; j < N; j++) {
 		for (int i = 0; i < N; i++) {
-			table[i][j] = -1;
+			table[j][i] = -1;
 		}
 	}
 
@@ -89,8 +90,7 @@ int main() {
 		rects[i].index = i;
 	}
 
-	//debug();
-
+	//Tervrajzok rendezése
 	qsort(rects, K, sizeof(rect), [](const void *a, const void *b){
 		rect arg1 = *static_cast<const rect*>(a);
 		rect arg2 = *static_cast<const rect*>(b);
@@ -105,20 +105,27 @@ int main() {
 	debug();
 
 	vector<pair<int, int>> v;
-	getFirstEmpty(v);
+	getEmpties(v);
+	
+	putRect(0, 0, 6, 3, -2);
+	v.clear();
+	getEmpties(v);
 
+	putRect(0, 7, 2, 2, -3);
+	v.clear();
+	getEmpties(v);
+	
+	putRect(7, 1, 2, 2, -4);
+	v.clear();
+	getEmpties(v);
+	
+	
+	debugTable();
+	
 	for (auto a : v) {
 		cout << a.first << " " << a.second << endl;
 	}
 	
-	putRect(0, 0, 6, 3, 0);
-
-	getFirstEmpty(v);
-
-	for (auto a : v) {
-		cout << a.first << " " << a.second << endl;
-	}
-	//debugTable();
 
 	delete[] rects;
 	return 0;
