@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-
+#include <cstdlib>
 
 using namespace std;
 
@@ -24,7 +24,7 @@ bool densitySearch(long long x0, long long y0, long long a0, vector<point>& citi
 	a1=a0/2; //egy szektor oldalhossza
 	x2=x0;
 	y2=y0; //eddigi legsurubb szektor
-	long double r01=0;
+	long long r01=1000000000000000000;
 	vector<point> sectorCities;
 	vector<point> sectorCitiesTemp;
 	for (int i=0;i<3;i++){
@@ -34,7 +34,7 @@ bool densitySearch(long long x0, long long y0, long long a0, vector<point>& citi
 			int count=0;
 			sectorCitiesTemp.clear();
 			for (size_t k=0;k<cities.size();k++) if (cities[k].x>=(x1-a1) && cities[k].x<=x1 && cities[k].y>=(y1-a1) && cities[k].y<=y1) {count++; sectorCitiesTemp.push_back(cities[k]);}
-			if ( r01<(double(count)/(a1*a1)) && count>=K){
+			if ( r01>((a1*a1)/double(count)) && count>=K){
 					found=true;
 					//cout << "talaltam surubbet" << endl;
 					sectorCities=sectorCitiesTemp;
@@ -63,16 +63,28 @@ int main()
 	while (repeat) //ha igen, akkor tovabb keresunk, ha nem, akkor igy jartunk
 	{
 		repeat=densitySearch(x2,y2,a1, cities);
-		//if (repeat) cout << x2 << " " << y2 << " " << a1 << " " << cities.size() << endl;
 	}
 	//ekkor a cities legalabb K varost tartalmaz, a palya legsurubb reszletebol
 	
 	
-	int sol[K];
-	sol[0]=cities[0].index;
+	//int sol[K];
+	//sol[0]=cities[0].index;
+	point citiesArray[cities.size()];
+	for (size_t i=0;i<cities.size();i++) citiesArray[i]=cities[i];
+	
+	qsort(citiesArray, K, sizeof(point), [](const void *a, const void *b){
+		point arg1 = *static_cast<const point*>(a);
+		point arg2 = *static_cast<const point*>(b);
+
+		if (arg1.x < arg2.x) return 1;
+		if (arg1.x > arg2.x) return -1;
+		if (arg1.y < arg2.y) return 1;
+		if (arg1.y > arg2.y) return -1;
+		return 0;
+	});
 	
 	
-	for (int i=0;i<K;i++) cout << names[sol[i].index] << endl;
+	for (int i=0;i<K;i++) cout << names[citiesArray[i].index] << endl;
 	delete[] names;
 	return 0;	
 }
