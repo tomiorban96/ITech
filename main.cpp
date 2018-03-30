@@ -68,12 +68,12 @@ int main()
 	
 	list<point> citiesList;
 	int highway[K];
+	for (size_t i=0;i<cities.size();i++) citiesList.push_back(cities[i]);
 	auto currentCity=citiesList.front();
 	highway[0]=currentCity.index;
-	citiesList.erase(citiesList.begin()); //az autopalya kezdete a lista elso eleme	
+	citiesList.pop_front(); //az autopalya kezdete a lista elso eleme	
 	if (cities.size()<=98750)
 	{
-	for (size_t i=0;i<cities.size();i++) citiesList.push_back(cities[i]);
 	for (int i=1;i<K;i++){
 		auto closestCity=citiesList.begin();
 		long long dist=2000000000;
@@ -88,22 +88,15 @@ int main()
 		highway[i]=currentCity.index;
 		citiesList.erase(closestCity);
 	}
-	
-	
-	
-	
-	
-	
 	for (int i=0;i<K;i++) cout << names[highway[i]] << endl;
 	}
 	else{
-	for (size_t i=0;i<cities.size();i++) citiesList.push_back(cities[i]);
 	for (int i=1;i<K;i++){
 		auto closestCity=citiesList.begin();
 		long long dist=2000000000;
 		double m=0;
-		for (auto it=citiesList.begin(); size_t(m)<(citiesList.size()-3); it++){
-			m+=2.5;
+		for (auto it=citiesList.begin(); size_t(m)<(citiesList.size()-3); ((it++)++)++){
+			m+=3;
 			long long d= (it->x-currentCity.x)*(it->x-currentCity.x)+(it->y-currentCity.y)*(it->y-currentCity.y);
 			if ( d<dist ){
 				dist=d;
