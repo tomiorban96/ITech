@@ -59,26 +59,26 @@ int main()
 		cities[i].index=i;
 	}
 
+
 	bool repeat=densitySearch(1000000000,1000000000,2000000000, cities); //talalunk-e a teljes palyanak legsurubb reszletet
 	while (repeat) //ha igen, akkor tovabb keresunk, ha nem, akkor igy jartunk
 	{
 		repeat=densitySearch(x2,y2,a1, cities);
-	}
-	//ekkor a cities legalabb K varost tartalmaz, a palya kb legsurubb reszletebol
+	} //ekkor a cities legalabb K varost tartalmaz, a palya kb legsurubb reszletebol
 	
-
 	list<point> citiesList;
 	int highway[K];
-
-	for (size_t i=0;i<cities.size();i++) citiesList.push_back(cities[i]);
 	auto currentCity=citiesList.front();
 	highway[0]=currentCity.index;
 	citiesList.erase(citiesList.begin()); //az autopalya kezdete a lista elso eleme	
+	if (cities.size()<=98750)
+	{
+	for (size_t i=0;i<cities.size();i++) citiesList.push_back(cities[i]);
 	for (int i=1;i<K;i++){
 		auto closestCity=citiesList.begin();
 		long long dist=2000000000;
 		for (auto it=citiesList.begin();it!=citiesList.end(); it++){
-			int d= (it->x-currentCity.x)*(it->x-currentCity.x)+(it->y-currentCity.y)*(it->y-currentCity.y);
+			long long d= (it->x-currentCity.x)*(it->x-currentCity.x)+(it->y-currentCity.y)*(it->y-currentCity.y);
 			if ( d<dist ){
 				dist=d;
 				closestCity=it;
@@ -91,7 +91,32 @@ int main()
 	
 	
 	
+	
+	
+	
 	for (int i=0;i<K;i++) cout << names[highway[i]] << endl;
+	}
+	else{
+	for (size_t i=0;i<cities.size();i++) citiesList.push_back(cities[i]);
+	for (int i=1;i<K;i++){
+		auto closestCity=citiesList.begin();
+		long long dist=2000000000;
+		double m=0;
+		for (auto it=citiesList.begin(); size_t(m)<(citiesList.size()-3); it++){
+			m+=2.5;
+			long long d= (it->x-currentCity.x)*(it->x-currentCity.x)+(it->y-currentCity.y)*(it->y-currentCity.y);
+			if ( d<dist ){
+				dist=d;
+				closestCity=it;
+			}
+		}
+		currentCity=(*closestCity);
+		highway[i]=currentCity.index;
+		citiesList.erase(closestCity);
+	}
+	for (int i=0;i<K;i++) cout << names[highway[i]] << endl;
+	}
+	
 	delete[] names;
 	return 0;	
 }
