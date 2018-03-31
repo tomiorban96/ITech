@@ -78,6 +78,13 @@ int main() {
 	list<rect> rectsList;
 	for (size_t i=0;i<K;i++) rectsList.push_back(rects[i]);
 	list<rect> rectsList2; //ha nem fer be egy teglalap, akkor elforgatva megprobaljuk kesobb
+	
+	long long sumArea=0;
+	for (auto r : rectsList) sumArea+=r.w*r.h; //ha nagyon nagy az osszterulete a tervrajzoknak, akkor a legnagyobbakat eldobjuk
+	while (sumArea>=1.1*16000000){
+		sumArea-=rectsList.front().w*rectsList.front().h;
+		rectsList.pop_front();
+	}
 
 	bool placed=false;
 	while (!rectsList.empty()){ //amig elforgatas nelkul van mivel probalkozni
@@ -111,11 +118,6 @@ int main() {
 	for (size_t i=0;i<K;i++){
 		if (output[i].index==-2) cout << i << " " << output[i].w << " " << output[i].h <<  " K" << endl;
 	}
-	
-	
-	
-	
-	
 	
 	
 	
