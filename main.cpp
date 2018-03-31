@@ -28,10 +28,10 @@ bool densitySearch(long long x0, long long y0, long long a0, vector<point>& citi
 	long long r01=1000000000000000000;
 	vector<point> sectorCities;
 	vector<point> sectorCitiesTemp;
-	for (int i=0;i<3;i++){
-		for (int j=0;j<3;j++){
-			long long x1=x0-j*a1/2; //aktualisan vizsgalt szektor jobb felso sarka
-			long long y1=y0-i*a1/2;
+	for (int i=0;i<2;i++){
+		for (int j=0;j<2;j++){
+			long long x1=x0-j*a1; //aktualisan vizsgalt szektor jobb felso sarka
+			long long y1=y0-i*a1;
 			int count=0;
 			sectorCitiesTemp.clear();
 			for (size_t k=0;k<cities.size();k++) if (cities[k].x>=(x1-a1) && cities[k].x<=x1 && cities[k].y>=(y1-a1) && cities[k].y<=y1) {count++; sectorCitiesTemp.push_back(cities[k]);}
@@ -72,7 +72,7 @@ int main()
 	auto currentCity=citiesList.front();
 	highway[0]=currentCity.index;
 	citiesList.pop_front(); //az autopalya kezdete a lista elso eleme	
-	if (cities.size()<=98750)
+	if (cities.size()<=50000)
 	{
 	for (int i=1;i<K;i++){
 		auto closestCity=citiesList.begin();
@@ -90,8 +90,27 @@ int main()
 	}
 	for (int i=0;i<K;i++) cout << names[highway[i]] << endl;
 	}
-	else{
+	else if (K<=95000){
 	for (int i=1;i<K;i++){
+		auto closestCity=citiesList.begin();
+		long long dist=2000000000;
+		double m=0;
+		for (auto it=citiesList.begin(); size_t(m)<(citiesList.size()-2); (it++)++){
+			m+=2;
+			long long d= (it->x-currentCity.x)*(it->x-currentCity.x)+(it->y-currentCity.y)*(it->y-currentCity.y);
+			if ( d<dist ){
+				dist=d;
+				closestCity=it;
+			}
+		}
+		currentCity=(*closestCity);
+		highway[i]=currentCity.index;
+		citiesList.erase(closestCity);
+	}
+	for (int i=0;i<K;i++) cout << names[highway[i]] << endl;
+	}
+	else{
+		for (int i=1;i<K;i++){
 		auto closestCity=citiesList.begin();
 		long long dist=2000000000;
 		double m=0;
@@ -107,8 +126,10 @@ int main()
 		highway[i]=currentCity.index;
 		citiesList.erase(closestCity);
 	}
-	for (int i=0;i<K;i++) cout << names[highway[i]] << endl;
+	for (int i=0;i<K;i++) cout << names[highway[i]] << endl;	
 	}
+	
+	
 	
 	delete[] names;
 	return 0;	
