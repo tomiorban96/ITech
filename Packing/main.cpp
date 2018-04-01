@@ -30,8 +30,8 @@ void debugTable() {
 }
 
 bool putRect(int y, int x, int w, int h, int index) {
-	for (int i=0;i<w;i++) if (table[y][x+i]!=-1 || x+i>=N) return false;
-	for (int i=0;i<h;i++) if (table[y+i][x]!=-1 || y+i>=N) return false;
+	for (int i=0;i<w;i++) if (x+i>=N || table[y][x+i]!=-1) return false;
+	for (int i=0;i<h;i++) if (y+i>=N || table[y+i][x]!=-1) return false;
 	for (int j = y; j < y + h; j++) {
 		for (int i = x; i < x + w; i++) {
 			table[j][i] = index;
@@ -50,7 +50,7 @@ int main() {
 		}
 	}
 	
-	//BeolvasÃ¡s, feltÃ¶ltÃ©s
+	//Beolvasás, feltöltés
 	cin >> K;
 	rects = new rect[K];
 	for (size_t i = 0; i < K; i++) {
@@ -58,7 +58,7 @@ int main() {
 		rects[i].index = i;
 	}
 	
-	//Tervrajzok rendezÃ©se
+	//Tervrajzok rendezése
 	qsort(rects, K, sizeof(rect), [](const void *a, const void *b){
 		rect arg1 = *static_cast<const rect*>(a);
 		rect arg2 = *static_cast<const rect*>(b);
