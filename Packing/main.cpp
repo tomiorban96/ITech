@@ -42,7 +42,7 @@ bool putRect(int y, int x, int w, int h, int index) {
 
 int main() {
 	
-	int count=0;
+
 	//Init
 	for (int j = 0; j < N; j++) {
 		for (int i = 0; i < N; i++) {
@@ -77,17 +77,18 @@ int main() {
 	//Tervrajzok listaba fuzese
 	list<rect> rectsList;
 	for (size_t i=0;i<K;i++) rectsList.push_back(rects[i]);
-	list<rect> rectsList2; //ha nem fer be egy teglalap, akkor elforgatva megprobaljuk kesobb
 	
 	long long sumArea=0;
-	for (auto r : rectsList) sumArea+=r.w*r.h; //ha nagyon nagy az osszterulete a tervrajzoknak, akkor a legnagyobbakat eldobjuk
-	while (sumArea>=1.1*16000000){
+	for (auto r : rectsList) sumArea+=(r.w*r.h); //ha nagyon nagy az osszterulete a tervrajzoknak, akkor a legnagyobbakat eldobjuk
+	while (sumArea>=0.9*16000000){
 		sumArea-=rectsList.front().w*rectsList.front().h;
 		rectsList.pop_front();
 	}
+	
 
+	int count=0;
 	bool placed=false;
-	while (!rectsList.empty()){ //amig elforgatas nelkul van mivel probalkozni
+	while (!rectsList.empty()){ //elforgatas nelkul
 
 		placed=false;
 		rect current=rectsList.front();
@@ -109,17 +110,14 @@ int main() {
 			}
 		}
 		if (!placed){
-			rectsList2.push_back(current);
 			rectsList.pop_front();
-		}
-		
+		}	
 	}
+	
 	cout << count << endl;
 	for (size_t i=0;i<K;i++){
 		if (output[i].index==-2) cout << i << " " << output[i].w << " " << output[i].h <<  " K" << endl;
 	}
-	
-	
 	
 	delete[]output;
 	delete[] rects;
